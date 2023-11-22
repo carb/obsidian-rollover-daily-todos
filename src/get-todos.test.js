@@ -95,8 +95,14 @@ test("get todos (with alternate symbols and partially checked todos) with childr
 test("get todos (with default dash prefix and finished todos) with children", function () {
   // GIVEN
   const lines = [
+    "- [-] Canceled TODO",
+    "- [>] Forwarded TODO",
     "- [x] Completed TODO",
     "    - [ ] Next",
+    "    - [/] Incomplete, don't drop",
+    "    - [<] Scheduled, don't drop",
+    "    - [\"] Quote, don't drop",
+    "    - [i] Information, don't drop",
     "    * some stuff",
     "- [ ] Another one",
     "    - [x] Completed child",
@@ -110,6 +116,10 @@ test("get todos (with default dash prefix and finished todos) with children", fu
   // THEN
   const result = [
     "    - [ ] Next",
+    "    - [/] Incomplete, don't drop",
+    "    - [<] Scheduled, don't drop",
+    "    - [\"] Quote, don't drop",
+    "    - [i] Information, don't drop",
     "- [ ] Another one",
     "    - [x] Completed child",
     "    + another child",

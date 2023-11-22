@@ -8,14 +8,22 @@ class TodoParser {
   // Boolean that encodes whether nested items should be rolled over
   #withChildren;
 
-  constructor(lines, withChildren) {
+  #completeSymbols;
+
+  constructor(lines, withChildren, completeSymbols) {
+    if (completeSymbols.length == 0) {
+      completeSymbols = ["x", "\\-", ">"]
+    }
     this.#lines = lines;
     this.#withChildren = withChildren;
+    this.#completeSymbols = completeSymbols;
   }
 
   // Returns true if string s is a todo-item
   #isTodo(s) {
-    const r = new RegExp(`\\s*[${this.bulletSymbols.join("")}] \\[ \\].*`, "g"); // /\s*[-*+] \[ \].*/g;
+    const b = this.bulletSymbols.join("");
+    const c = this.#completeSymbols.join("");
+    const r = new RegExp(`^\\s*[${b}] \\[[^${c}]\\].*$`, "g");
     return r.test(s);
   }
 
@@ -75,7 +83,15 @@ class TodoParser {
 }
 
 // Utility-function that acts as a thin wrapper around `TodoParser`
-export const getTodos = ({ lines, withChildren = false }) => {
-  const todoParser = new TodoParser(lines, withChildren);
+export const getTodos = ({
+  lines,
+  withChildren = false,
+  completeSymbols = [],
+}) => {
+  const todoParser = new TodoParser(
+    lines,
+    withChildren,
+    completeSymbols,
+  );
   return todoParser.getTodos();
 };
